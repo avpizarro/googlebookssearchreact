@@ -1,0 +1,79 @@
+@font-face {
+  font-family: 'Akzidenz';
+  src: local('Akzidenz'), url(./fonts/Akzidenz-grotesk-bold.ttf) format('truetype');
+}
+
+body {
+  background-image: url("./images/background.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  font-family: 'Akzidenz', sans-serif;
+}
+
+.navbar-item, .card-footer-item{
+  font-weight: 600 !important;
+  letter-spacing: 0.05rem;
+  color: black !important;
+  font-size: 18px;
+}
+.preview-link, .read-more-link {
+  color: orange !important;
+}
+
+.title {
+  color: black !important;
+}
+
+.input:focus,
+.input:active, 
+button:focus,
+button:active
+{
+  border-color: #363636 !important;
+  box-shadow: 0 0 0.125em 0.2em orange !important;
+}
+
+.progressbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 0.35rem !important;
+  color: orange !important;
+  transition: width 0.1s linear;
+}
+
+
+.progressbar::-webkit-progress-value {
+  background-color: orange;
+}
+
+.progressbar::-moz-progress-bar {
+  background-color: orange;
+}
+.progressbar::-ms-fill {
+  background-color: orange;
+}
+.progressbar:indeterminate {
+  background-color: orange;
+  background-image: linear-gradient(to right, orange 30%, #ededed 30%) !important;
+}
+
+.card-column {
+  padding: 20px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.card-content {
+  padding: 2.5rem !important;
+  margin: 20px;
+}
+.card-footer {
+  margin-top: auto;
+}
