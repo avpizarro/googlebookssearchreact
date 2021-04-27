@@ -6,7 +6,7 @@
 
 An application to search for books and dave the ones you want to read.
 
-Deployed app :link:
+Deployed app :link: https://fierce-ridge-94216.herokuapp.com/
 
 Github repository :link: https://github.com/avpizarro/googlebookssearchreact.git
 
@@ -23,7 +23,7 @@ Github repository :link: https://github.com/avpizarro/googlebookssearchreact.git
 
 ## Installation
 
-Visit this link to start using the app :link: 
+Visit this link to start using the app :link: https://fierce-ridge-94216.herokuapp.com/
 
 ## Usage
 
