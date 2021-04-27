@@ -51,22 +51,19 @@ function Search() {
     console.log(`I have been clicked ${e.target.title}`);
     const chosenBook = books.filter(
       (book) => book.volumeInfo.title === e.target.title
-    );
-    if(chosenBook && bookToSave){
-      console.log(chosenBook[0].volumeInfo);
-    setBooktoSave(chosenBook[0].volumeInfo);
-    
+      );
+      if (chosenBook && bookToSave) {
+      setBooktoSave(chosenBook[0].volumeInfo);
+    }
     API.saveBook({
-        title: bookToSave.title,
-        author: bookToSave.author,
-        link: bookToSave.previewLink,
-        description: bookToSave.description,
-        image: bookToSave.imageLinks.smallThumbnail,
-      }
-        )
+      title: bookToSave.title,
+      author: bookToSave.author,
+      link: bookToSave.previewLink,
+      description: bookToSave.description,
+      image: bookToSave.imageLinks.smallThumbnail,
+    })
       .then((res) => console.log("Book saved " + res))
       .catch((err) => console.log(err));
-    };
   };
 
   return (

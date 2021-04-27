@@ -6,8 +6,7 @@ function BookSearch(props) {
   return (
     <div>
       <div className="columns" style={{maxHeight: "64px"}}>
-        <div className="column"></div>
-        <div className="column">
+        <div className="column is-half is-offset-one-quarter">
           <div
             className="field has-addons"
             style={{
@@ -34,7 +33,6 @@ function BookSearch(props) {
             </div>
           </div>
         </div>
-        <div className="column"></div>
       </div>
     </div>
   );

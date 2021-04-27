@@ -12,12 +12,13 @@ import API from "../utils/API";
 
 function Saved() {
   const [books, setBooks] = useState([]);
+  const [booksUpdated, setBooksUpdated] = useState([])
 
 
   // Load all books and store them with setBooks
   useEffect(() => {
     loadBooks();
-  }, []);
+  }, [booksUpdated]);
 
   // Loads all books and sets them to books
   function loadBooks() {
@@ -31,6 +32,11 @@ function Saved() {
 
   const deleteBook = (e) => {
     console.log(e.target.id);
+    const savedBooks = books.filter(
+      (book) => book._id !== e.target.id
+    );
+    setBooks(savedBooks);
+    setBooksUpdated(savedBooks);
     API.deleteBook(e.target.id)
     .then(res => console.log("Book deleted: " + res))
     .catch(err => console.log(err));
