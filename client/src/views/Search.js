@@ -58,7 +58,7 @@ function Search() {
     
     API.saveBook({
         title: bookToSave.title,
-        author: bookToSave.authors[0],
+        author: bookToSave.author,
         link: bookToSave.previewLink,
         description: bookToSave.description,
         image: bookToSave.imageLinks.smallThumbnail,

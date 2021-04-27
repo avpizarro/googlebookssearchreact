@@ -31,9 +31,9 @@ function Saved() {
 
   const deleteBook = (e) => {
     console.log(e.target.id);
-    // API.deleteBook(e.target.title)
-    // .then(res => console.log("Book deleted: " + res))
-    // .catch(err => console.log(err));
+    API.deleteBook(e.target.id)
+    .then(res => console.log("Book deleted: " + res))
+    .catch(err => console.log(err));
   }
 
   return (
