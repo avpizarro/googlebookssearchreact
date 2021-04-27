@@ -60,14 +60,14 @@ function Search() {
     if (chosenBook) {
       setBooktoSave(chosenBook[0].volumeInfo);
     }
-    if (bookToSave !== {}) {
+    if (bookToSave) {
       console.log(bookToSave)
       API.saveBook({
         title: bookToSave.title,
         author: bookToSave.authors,
         link: bookToSave.previewLink,
         description: bookToSave.description,
-        image: bookToSave.imageLinks.smallThumbnail || logo,
+        image: bookToSave.imageLinks.smallThumbnail,
       })
         .then((res) => {
           console.log("Book saved " + res);
@@ -88,9 +88,9 @@ function Search() {
         show={show}
         Close={closeModal}
         title={bookToSave.title}
-        image={bookToSave.imageLinks.smallThumbnail}
         message="was added"
-      />
+        image={bookToSave.imageLinks.smallThumbnail}
+        />
       <BookSearch
         handleFormSubmit={handleFormSubmit}
         InputValueOnChange={InputValueOnChange}

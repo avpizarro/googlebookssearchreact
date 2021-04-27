@@ -51,6 +51,8 @@ function Saved() {
 
   const closeModal = () => setShow(false);
 
+  // title={deletedBook[0].title}
+  // image={deletedBook[0].image}
   if (deletedBook) {
     return (
       <div className="App">
@@ -59,8 +61,6 @@ function Saved() {
         <Modal
           show={show}
           Close={closeModal}
-          // title={deletedBook[0].title}
-          // image={deletedBook[0].image}
           message="Book deleted"
         />
 
