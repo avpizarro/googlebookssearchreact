@@ -8,13 +8,13 @@ import DeleteLink from "../components/DeleteLink/index";
 import Card from "../components/Card/index";
 import CardContent from "../components/CardContent";
 import CardFooter from "../components/CardFooter";
-import Modal from "../components/Modal";
+// import Modal from "../components/Modal";
 import API from "../utils/API";
 
 function Saved() {
   const [books, setBooks] = useState([]);
   const [booksUpdated, setBooksUpdated] = useState([]);
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
   const [deletedBook, setDeletedBook] = useState({});
 
   // Load all books and store them with setBooks
@@ -44,26 +44,18 @@ function Saved() {
     API.deleteBook(e.target.id)
       .then((res) => {
         console.log("Book deleted: " + res);
-        setShow(true);
+        // setShow(true);
       })
       .catch((err) => console.log(err));
   };
 
-  const closeModal = () => setShow(false);
+  // const closeModal = () => setShow(false);
 
-  // title={deletedBook[0].title}
-  // image={deletedBook[0].image}
   if (deletedBook) {
     return (
       <div className="App">
         <Navbar />
         <Header />
-        <Modal
-          show={show}
-          Close={closeModal}
-          message="Book deleted"
-        />
-
         <CardContainer>
           {books.map((book) => (
             <BookCard key={book.link}>

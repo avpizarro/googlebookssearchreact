@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import logo from "../images/logo192.png";
 import Navbar from "../components/Navbar/index";
 import Header from "../components/Header/index";
 import BookSearch from "../components/BookSearch/index";
@@ -12,7 +11,7 @@ import CardFooter from "../components/CardFooter";
 import API from "../utils/API";
 import CardContent from "../components/CardContent";
 import Card from "../components/Card";
-import Modal from "../components/Modal";
+// import Modal from "../components/Modal";
 
 function Search() {
   const initialQuery = localStorage.getItem("Search");
@@ -22,7 +21,7 @@ function Search() {
   const [query, setQuery] = useState(initialQuery || "");
   const [bookToSave, setBooktoSave] = useState({});
   const [progressValue, setProgressValue] = useState("0");
-  const [show, setShow] = useState(false);
+  // const [show, setShow] = useState(false);
 
   useEffect(() => {
     loadBooks();
@@ -71,26 +70,19 @@ function Search() {
       })
         .then((res) => {
           console.log("Book saved " + res);
-          setShow(true);
+          // setShow(true);
         })
         .catch((err) => console.log(err));
     }
   };
 
-  const closeModal = () => setShow(false);
+  // const closeModal = () => setShow(false);
 
   return (
     <div className="App">
       <ProgressBar value={progressValue} />
       <Navbar />
       <Header />
-      <Modal
-        show={show}
-        Close={closeModal}
-        title={bookToSave.title}
-        message="was added"
-        image={bookToSave.imageLinks.smallThumbnail}
-        />
       <BookSearch
         handleFormSubmit={handleFormSubmit}
         InputValueOnChange={InputValueOnChange}
