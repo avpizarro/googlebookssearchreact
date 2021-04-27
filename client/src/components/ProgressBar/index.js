@@ -1,8 +1,8 @@
 
-function ProgressBar() {
+function ProgressBar(props) {
   return (
   // <div className="progressbar" style={{width: "20%"}}></div>;
-  <progress className="progress is-small progressbar" value="20" max="100"></progress>
+  <progress className="progress is-small progressbar" value={props.value} max="100"></progress>
   )
 }
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import logo from "../images/logo192.png";
 import Navbar from "../components/Navbar/index";
 import Header from "../components/Header/index";
 import BookSearch from "../components/BookSearch/index";
@@ -20,9 +21,12 @@ function Search() {
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState(initialQuery || "");
   const [bookToSave, setBooktoSave] = useState({});
+  const [progressValue, setProgressValue] = useState("0");
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     loadBooks();
+    setProgressValue("0");
   }, [query]);
 
   function loadBooks() {
@@ -45,33 +49,48 @@ function Search() {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setQuery(inputValue);
+    setProgressValue(null);
   };
 
   const saveBook = (e) => {
     console.log(`I have been clicked ${e.target.title}`);
     const chosenBook = books.filter(
       (book) => book.volumeInfo.title === e.target.title
-      );
-      if (chosenBook && bookToSave) {
+    );
+    if (chosenBook) {
       setBooktoSave(chosenBook[0].volumeInfo);
     }
-    API.saveBook({
-      title: bookToSave.title,
-      author: bookToSave.author,
-      link: bookToSave.previewLink,
-      description: bookToSave.description,
-      image: bookToSave.imageLinks.smallThumbnail,
-    })
-      .then((res) => console.log("Book saved " + res))
-      .catch((err) => console.log(err));
+    if (bookToSave !== {}) {
+      console.log(bookToSave)
+      API.saveBook({
+        title: bookToSave.title,
+        author: bookToSave.authors,
+        link: bookToSave.previewLink,
+        description: bookToSave.description,
+        image: bookToSave.imageLinks.smallThumbnail || logo,
+      })
+        .then((res) => {
+          console.log("Book saved " + res);
+          setShow(true);
+        })
+        .catch((err) => console.log(err));
+    }
   };
+
+  const closeModal = () => setShow(false);
 
   return (
     <div className="App">
-      <ProgressBar />
+      <ProgressBar value={progressValue} />
       <Navbar />
       <Header />
-      <Modal />
+      <Modal
+        show={show}
+        Close={closeModal}
+        title={bookToSave.title}
+        image={bookToSave.imageLinks.smallThumbnail}
+        message="was added"
+      />
       <BookSearch
         handleFormSubmit={handleFormSubmit}
         InputValueOnChange={InputValueOnChange}
@@ -81,17 +100,17 @@ function Search() {
           <BookCard key={book.volumeInfo.previewLink}>
             <Card>
               <CardContent
-                title={book.volumeInfo.title}
+                image={book.volumeInfo.imageLinks.smallThumbnail}
                 author={book.volumeInfo.authors[0]}
+                title={book.volumeInfo.title}
                 link={book.volumeInfo.previewLink}
                 description={book.volumeInfo.description}
-                image={book.volumeInfo.imageLinks.smallThumbnail}
-              ></CardContent>
+                ></CardContent>
               <CardFooter>
                 <SaveLink
                   saveBook={saveBook}
                   title={book.volumeInfo.title}
-                ></SaveLink>
+                  ></SaveLink>
               </CardFooter>
             </Card>
           </BookCard>
