@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 
 // Import local components
+import logo from "../images/logo192.png"
 import Navbar from "../components/Navbar/index";
 import Header from "../components/Header/index";
 import BookSearch from "../components/BookSearch/index";
@@ -64,7 +65,18 @@ function Search() {
       .then((res) => {
         console.log(res.data.items);
         const booksToAdd = res.data.items.map((book) => {
-          if (!book.volumeInfo.description) {
+          if (!book.volumeInfo.imageLinks) {
+            return {authors: book.volumeInfo.authors || "",
+            title: book.volumeInfo.title || "",
+            image: logo,
+            description: "",
+            descriptionShort: "",
+            link: book.volumeInfo.previewLink || "",
+            extraDescription: "",
+            showReadMore: false,
+          }
+          }
+          else if (!book.volumeInfo.description) {
             return {
               authors: book.volumeInfo.authors || "",
               title: book.volumeInfo.title || "",
@@ -93,7 +105,7 @@ function Search() {
               image: book.volumeInfo.imageLinks.smallThumbnail || "",
               description: book.volumeInfo.description,
               descriptionShort: book.volumeInfo.description.slice(0, 400),
-              link: book.volumeInfo.previewLink || "",
+              link: book.volumeInfo.previewLink ,
               extraDescription: book.volumeInfo.description.slice(400, -1),
               showReadMore: true,
             };
