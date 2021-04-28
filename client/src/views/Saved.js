@@ -145,7 +145,7 @@ function Saved() {
                 author={book.author}
                 title={book.title}
                 link={book.link}
-                description={book.description}
+                description={book.descriptionShort}
                 expandOnClick={expandOnClick}
                 extraContent={book.extraDescription}
                 linkName={linkName}
