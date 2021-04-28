@@ -1,6 +1,7 @@
 @font-face {
-  font-family: 'Akzidenz';
-  src: local('Akzidenz'), url(./fonts/Akzidenz-grotesk-bold.ttf) format('truetype');
+  font-family: "Akzidenz";
+  src: local("Akzidenz"),
+    url(./fonts/Akzidenz-grotesk-bold.ttf) format("truetype");
 }
 
 body {
@@ -10,16 +11,18 @@ body {
   background-repeat: no-repeat;
   background-size: cover;
   min-height: 100vh;
-  font-family: 'Akzidenz', sans-serif;
+  font-family: "Akzidenz", sans-serif;
 }
 
-.navbar-item, .card-footer-item{
+.navbar-item,
+.card-footer-item {
   font-weight: 600 !important;
   letter-spacing: 0.05rem;
   color: black !important;
   font-size: 18px;
 }
-.preview-link, .read-more-link {
+.preview-link,
+.read-more-link {
   color: orange !important;
 }
 
@@ -28,10 +31,9 @@ body {
 }
 
 .input:focus,
-.input:active, 
+.input:active,
 button:focus,
-button:active
-{
+button:active {
   border-color: #363636 !important;
   box-shadow: 0 0 0.125em 0.2em orange !important;
 }
@@ -46,7 +48,6 @@ button:active
   transition: width 0.1s linear;
 }
 
-
 .progressbar::-webkit-progress-value {
   background-color: orange;
 }
@@ -59,7 +60,11 @@ button:active
 }
 .progressbar:indeterminate {
   background-color: orange;
-  background-image: linear-gradient(to right, orange 30%, #ededed 30%) !important;
+  background-image: linear-gradient(
+    to right,
+    orange 30%,
+    #ededed 30%
+  ) !important;
 }
 
 .card-column {
@@ -77,4 +82,8 @@ button:active
 }
 .card-footer {
   margin-top: auto;
+}
+
+.card-footer-item:hover {
+  text-shadow: 0 0 .65px #333, 0 0 .65px #333;
 }
