@@ -11,7 +11,7 @@ import CardFooter from "../components/CardFooter";
 import API from "../utils/API";
 import CardContent from "../components/CardContent";
 import Card from "../components/Card";
-// import Modal from "../components/Modal";
+import Modal from "../components/Modal";
 
 function Search() {
   const initialQuery = localStorage.getItem("Search");
@@ -19,9 +19,17 @@ function Search() {
   const [books, setBooks] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const [query, setQuery] = useState(initialQuery || "");
-  const [bookToSave, setBooktoSave] = useState({});
+  const [bookForModal, setBookForModal] = useState({
+    volumeInfo: {
+      title: '',
+      imageLinks: {
+        smallThumbnail: '',
+      }
+    }
+  
+  });
   const [progressValue, setProgressValue] = useState("0");
-  // const [show, setShow] = useState(false);
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     loadBooks();
@@ -56,33 +64,40 @@ function Search() {
     const chosenBook = books.filter(
       (book) => book.volumeInfo.title === e.target.title
     );
-    if (chosenBook) {
-      setBooktoSave(chosenBook[0].volumeInfo);
-    }
-    if (bookToSave) {
-      console.log(bookToSave)
-      API.saveBook({
-        title: bookToSave.title,
-        author: bookToSave.authors,
-        link: bookToSave.previewLink,
-        description: bookToSave.description,
-        image: bookToSave.imageLinks.smallThumbnail,
+
+    const bookToSave = chosenBook[0];
+    setBookForModal(bookToSave);
+    console.log("Title for Moda--->",bookForModal)
+    console.log("SELECTED OBJECT--->", bookToSave);
+
+    API.saveBook({
+      title: bookToSave.volumeInfo.title,
+      author: bookToSave.volumeInfo.authors[0],
+      link: bookToSave.volumeInfo.previewLink,
+      description: bookToSave.volumeInfo.description,
+      image: bookToSave.volumeInfo.imageLinks.smallThumbnail,
+    })
+      .then((res) => {
+        console.log("Book saved " + res);
+        setShow(true);
       })
-        .then((res) => {
-          console.log("Book saved " + res);
-          // setShow(true);
-        })
-        .catch((err) => console.log(err));
-    }
+      .catch((err) => console.log(err));
   };
 
-  // const closeModal = () => setShow(false);
+  const closeModal = () => setShow(false);
 
   return (
     <div className="App">
       <ProgressBar value={progressValue} />
       <Navbar />
       <Header />
+      <Modal
+        show={show}
+      close={closeModal}
+        title={bookForModal.volumeInfo.title}
+        message="was added"
+        image={bookForModal.volumeInfo.imageLinks.smallThumbnail}
+      />
       <BookSearch
         handleFormSubmit={handleFormSubmit}
         InputValueOnChange={InputValueOnChange}
@@ -97,12 +112,12 @@ function Search() {
                 title={book.volumeInfo.title}
                 link={book.volumeInfo.previewLink}
                 description={book.volumeInfo.description}
-                ></CardContent>
+              ></CardContent>
               <CardFooter>
                 <SaveLink
                   saveBook={saveBook}
                   title={book.volumeInfo.title}
-                  ></SaveLink>
+                ></SaveLink>
               </CardFooter>
             </Card>
           </BookCard>

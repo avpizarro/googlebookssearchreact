@@ -8,19 +8,25 @@ import DeleteLink from "../components/DeleteLink/index";
 import Card from "../components/Card/index";
 import CardContent from "../components/CardContent";
 import CardFooter from "../components/CardFooter";
-// import Modal from "../components/Modal";
+import Modal from "../components/Modal";
 import API from "../utils/API";
 
 function Saved() {
   const [books, setBooks] = useState([]);
-  const [booksUpdated, setBooksUpdated] = useState([]);
-  // const [show, setShow] = useState(false);
-  const [deletedBook, setDeletedBook] = useState({});
+  const [show, setShow] = useState(false);
+  const [deletedBook, setDeletedBook] = useState({
+    volumeInfo: {
+      title: "",
+      imageLinks: {
+        smallThumbnail: "",
+      },
+    },
+  });
 
   // Load all books and store them with setBooks
   useEffect(() => {
     loadBooks();
-  }, [booksUpdated]);
+  }, []);
 
   // Loads all books and sets them to books
   function loadBooks() {
@@ -37,25 +43,32 @@ function Saved() {
     console.log(e.target.id);
     const savedBooks = books.filter((book) => book._id !== e.target.id);
     const bookToDelete = books.filter((book) => book._id === e.target.id);
-    setDeletedBook(bookToDelete);
+    console.log('bookToDelete-->',bookToDelete)
+    setDeletedBook(bookToDelete[0]);
     console.log(deletedBook);
     setBooks(savedBooks);
-    setBooksUpdated(savedBooks);
     API.deleteBook(e.target.id)
       .then((res) => {
         console.log("Book deleted: " + res);
-        // setShow(true);
+        setShow(true);
       })
       .catch((err) => console.log(err));
   };
 
-  // const closeModal = () => setShow(false);
+  const closeModal = () => setShow(false);
 
-  if (deletedBook) {
+  
     return (
       <div className="App">
         <Navbar />
         <Header />
+        <Modal
+        show={show}
+        close={closeModal}
+        message="Book deleted"
+        title={deletedBook.title}
+        image={deletedBook.image}
+      />
         <CardContainer>
           {books.map((book) => (
             <BookCard key={book.link}>
@@ -80,6 +93,6 @@ function Saved() {
       </div>
     );
   }
-}
+
 
 export default Saved;

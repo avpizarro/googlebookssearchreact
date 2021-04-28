@@ -13,7 +13,7 @@ function Modal(props) {
         <div className="media">
           <div className="media-left">
             <figure className="image is-48x48">
-              <img src={props.image}></img>
+              <img src={props.image} />
             </figure>
           </div>
           <p>
@@ -30,7 +30,7 @@ function Modal(props) {
       <button
         className="modal-close is-large"
         aria-label="close"
-        onClick={props.Close}
+        onClick={props.close}
       ></button>
     </div>
   );
