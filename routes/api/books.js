@@ -16,7 +16,9 @@ router.get("/", (req, res) => {
 // @desc Add book
 // @access Public
 router.post("/", (req, res) => {
-  Book.create(req.body).then((book) => res.json(book));
+  Book.create(req.body)
+  .then((book) => res.json(book))
+  .catch((err) => res.status(404).json({ success: false }));
 });
 
 // @route DELETE api/books
@@ -24,7 +26,9 @@ router.post("/", (req, res) => {
 // @access Public
 router.delete("/:id", (req, res) => {
   Book.findById(req.params.id)
-    .then((item) => item.remove().then(() => res.json({ success: true })))
+    .then((item) => item.remove()
+    .then(() => res.json({ success: true }))
+    )
     .catch((err) => res.status(404).json({ success: false }));
 });
 

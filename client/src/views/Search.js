@@ -45,10 +45,8 @@ function Search() {
   // Set state for Modal message
   const [modalMessage, setModalMessage] = useState("");
 
- 
   // Set State to change the linkName
   const [linkName, setLinkName] = useState("Read More >> ");
-
 
   // Set state for progress bar
   const [progressValue, setProgressValue] = useState("0");
@@ -124,6 +122,7 @@ function Search() {
 
   // Function to save the Book in the db, trigger the modal
   const saveBook = (e) => {
+    setModalMessage("");
     console.log(`I have been clicked ${e.target.title}`);
     const chosenBook = books.filter((book) => book.title === e.target.title);
     const bookToSave = chosenBook[0];
@@ -141,9 +140,11 @@ function Search() {
         setShow(true);
         setModalMessage("was added");
       })
-      .catch((err) => console.log(err));
-    setShow(true);
-    setModalMessage("was already added");
+      .catch((err) => {
+        setShow(true);
+        setModalMessage("was already added");
+        return err;
+      });
   };
 
   // Function to close the Modal
