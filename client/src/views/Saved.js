@@ -18,7 +18,6 @@ import API from "../utils/API";
 
 // Create Saved page component
 function Saved() {
-
   // Set the states to display books, modal and render again after a Book is deleted
   const [books, setBooks] = useState([]);
   const [show, setShow] = useState(false);
@@ -31,6 +30,9 @@ function Saved() {
     },
   });
 
+  // Set State to change the linkName
+  const [linkName, setLinkName] = useState("Read More >> ");
+
   // Load all books and store them with setBooks
   useEffect(() => {
     loadBooks();
@@ -41,23 +43,69 @@ function Saved() {
     axios
       .get("/api/books/")
       .then((res) => {
-        console.log(res);
-        setBooks(res.data);
+        console.log(res.data);
+        const bookToAdd = res.data.map((book) => {
+          if (!book.description) {
+            return {
+              author: book.author,
+              title: book.title,
+              image: book.image,
+              description: "",
+              descriptionShort: "",
+              link: book.link,
+              extraDescription: "",
+              showReadMore: false,
+              id: book._id
+            };
+          } else if (book.description.length < 400) {
+            return {
+              author: book.author,
+              title: book.title,
+              image: book.image,
+              description: book.description,
+              descriptionShort: book.description,
+              link: book.link,
+              extraDescription: "",
+              showReadMore: false,
+              id: book._id
+            };
+          } else {
+            return {
+              author: book.author,
+              title: book.title,
+              image: book.image,
+              description: book.description,
+              descriptionShort: book.description.slice(0, 400),
+              link: book.link,
+              extraDescription: book.description.slice(400, -1),
+              showReadMore: true,
+              id: book._id
+            };
+          }
+        });
+        console.log(bookToAdd);
+        setBooks(bookToAdd);
       })
+      //   console.log(res);
+
+      //   setBooks(res.data);
+      // })
       .catch((err) => console.log(err));
   }
-// Function to delete a Book
+  // Function to delete a Book
   const deleteBook = (e) => {
-
-    // Remove the deleted book from saved books array and stop displaying it
-    const savedBooks = books.filter((book) => book._id !== e.target.id);
-    setBooks(savedBooks);
-    
     // Get the info from the deleted book to display in Modal
-    const bookToDelete = books.filter((book) => book._id === e.target.id);
-    setDeletedBook(bookToDelete[0]);
+    const chosenBook = books.filter((book) => book.id === e.target.id);
+    const bookToDelete = chosenBook[0];
+    setDeletedBook(bookToDelete);
+    
+    // Remove the deleted book from saved books array and stop displaying it
+    const savedBooks = books.filter((book) => book.id !== e.target.id);
+    setBooks(savedBooks);
 
-// POST request to delete Book from db
+
+
+    // POST request to delete Book from db
     API.deleteBook(e.target.id)
       .then((res) => {
         setShow(true);
@@ -68,42 +116,50 @@ function Saved() {
   // Function to close the modal
   const closeModal = () => setShow(false);
 
-  
-    return (
-      <div className="App">
-        <Navbar />
-        <Header />
-        <Modal
+  //  Function to expand the ReadMore
+  const expandOnClick = (e) => {
+    if (linkName === "Read Less << ") {
+      setLinkName("Read More >> ");
+    } else {
+      setLinkName("Read Less << ");
+    }
+  };
+
+  return (
+    <div className="App">
+      <Navbar />
+      <Header />
+      <Modal
         show={show}
         close={closeModal}
         message="was removed"
         title={deletedBook.title}
         image={deletedBook.image}
       />
-        <CardContainer>
-          {books.map((book) => (
-            <BookCard key={book.link}>
-              <Card>
-                <CardContent
-                  title={book.title}
-                  author={book.author}
-                  link={book.link}
-                  description={book.description}
-                  image={book.image}
-                ></CardContent>
-                <CardFooter>
-                  <DeleteLink
-                    deleteBook={deleteBook}
-                    id={book._id}
-                  ></DeleteLink>
-                </CardFooter>
-              </Card>
-            </BookCard>
-          ))}
-        </CardContainer>
-      </div>
-    );
-  }
-
+      <CardContainer>
+        {books.map((book) => (
+          <BookCard key={book.link}>
+            <Card>
+              <CardContent
+                image={book.image}
+                author={book.author}
+                title={book.title}
+                link={book.link}
+                description={book.description}
+                expandOnClick={expandOnClick}
+                extraContent={book.extraDescription}
+                linkName={linkName}
+                showReadMore={book.showReadMore}
+              ></CardContent>
+              <CardFooter>
+                <DeleteLink deleteBook={deleteBook} id={book.id}></DeleteLink>
+              </CardFooter>
+            </Card>
+          </BookCard>
+        ))}
+      </CardContainer>
+    </div>
+  );
+}
 
 export default Saved;
