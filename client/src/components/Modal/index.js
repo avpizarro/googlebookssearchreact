@@ -20,7 +20,7 @@ function Modal(props) {
             <div className="media-content mt-4">
               <div className="content">
                 <span>
-                  {props.title} {props.message}
+                  <span className="is-size-5">{props.title} </span>{props.message}
                 </span>
               </div>
             </div>

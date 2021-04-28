@@ -1,5 +1,8 @@
+// Import dependencies
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+
+// Import components
 import Navbar from "../components/Navbar/index";
 import Header from "../components/Header/index";
 import CardContainer from "../components/CardContainer/index";
@@ -9,9 +12,14 @@ import Card from "../components/Card/index";
 import CardContent from "../components/CardContent";
 import CardFooter from "../components/CardFooter";
 import Modal from "../components/Modal";
+
+// Import utils
 import API from "../utils/API";
 
+// Create Saved page component
 function Saved() {
+
+  // Set the states to display books, modal and render again after a Book is deleted
   const [books, setBooks] = useState([]);
   const [show, setShow] = useState(false);
   const [deletedBook, setDeletedBook] = useState({
@@ -38,23 +46,26 @@ function Saved() {
       })
       .catch((err) => console.log(err));
   }
-
+// Function to delete a Book
   const deleteBook = (e) => {
-    console.log(e.target.id);
+
+    // Remove the deleted book from saved books array and stop displaying it
     const savedBooks = books.filter((book) => book._id !== e.target.id);
-    const bookToDelete = books.filter((book) => book._id === e.target.id);
-    console.log('bookToDelete-->',bookToDelete)
-    setDeletedBook(bookToDelete[0]);
-    console.log(deletedBook);
     setBooks(savedBooks);
+    
+    // Get the info from the deleted book to display in Modal
+    const bookToDelete = books.filter((book) => book._id === e.target.id);
+    setDeletedBook(bookToDelete[0]);
+
+// POST request to delete Book from db
     API.deleteBook(e.target.id)
       .then((res) => {
-        console.log("Book deleted: " + res);
         setShow(true);
       })
       .catch((err) => console.log(err));
   };
 
+  // Function to close the modal
   const closeModal = () => setShow(false);
 
   
@@ -65,7 +76,7 @@ function Saved() {
         <Modal
         show={show}
         close={closeModal}
-        message="Book deleted"
+        message="was removed"
         title={deletedBook.title}
         image={deletedBook.image}
       />
