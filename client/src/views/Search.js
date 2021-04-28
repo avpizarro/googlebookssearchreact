@@ -63,44 +63,44 @@ function Search() {
       .get("https://www.googleapis.com/books/v1/volumes?q=" + query)
       .then((res) => {
         console.log(res.data.items);
-        const bookToAdd = res.data.items.map((book) => {
+        const booksToAdd = res.data.items.map((book) => {
           if (!book.volumeInfo.description) {
             return {
-              authors: book.volumeInfo.authors,
-              title: book.volumeInfo.title,
-              image: book.volumeInfo.imageLinks.smallThumbnail,
+              authors: book.volumeInfo.authors || "",
+              title: book.volumeInfo.title || "",
+              image: book.volumeInfo.imageLinks.smallThumbnail || "",
               description: "",
               descriptionShort: "",
-              link: book.volumeInfo.previewLink,
+              link: book.volumeInfo.previewLink || "",
               extraDescription: "",
               showReadMore: false,
             };
           } else if (book.volumeInfo.description.length < 400) {
             return {
-              authors: book.volumeInfo.authors,
-              title: book.volumeInfo.title,
-              image: book.volumeInfo.imageLinks.smallThumbnail,
+              authors: book.volumeInfo.authors || "",
+              title: book.volumeInfo.title || "",
+              image: book.volumeInfo.imageLinks.smallThumbnail || "",
               description: book.volumeInfo.description,
               descriptionShort: book.volumeInfo.description,
-              link: book.volumeInfo.previewLink,
+              link: book.volumeInfo.previewLink || "",
               extraDescription: "",
               showReadMore: false,
             };
           } else {
             return {
-              authors: book.volumeInfo.authors,
-              title: book.volumeInfo.title,
-              image: book.volumeInfo.imageLinks.smallThumbnail,
+              authors: book.volumeInfo.authors || "",
+              title: book.volumeInfo.title || "",
+              image: book.volumeInfo.imageLinks.smallThumbnail || "",
               description: book.volumeInfo.description,
               descriptionShort: book.volumeInfo.description.slice(0, 400),
-              link: book.volumeInfo.previewLink,
+              link: book.volumeInfo.previewLink || "",
               extraDescription: book.volumeInfo.description.slice(400, -1),
               showReadMore: true,
             };
           }
         });
-        console.log(bookToAdd);
-        setBooks(bookToAdd);
+        console.log(booksToAdd);
+        setBooks(booksToAdd);
       });
   }
 
