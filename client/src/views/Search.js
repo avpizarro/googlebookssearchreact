@@ -136,7 +136,7 @@ function Search() {
   const saveBook = (e) => {
     setModalMessage("");
     console.log(`I have been clicked ${e.target.title}`);
-    const chosenBook = books.filter((book) => book.title === e.target.title);
+    const chosenBook = books.filter((book) => book.link === e.target.title);
     const bookToSave = chosenBook[0];
     setBookForModal(bookToSave);
 
@@ -205,7 +205,7 @@ function Search() {
                 showReadMore={book.showReadMore}
               ></CardContent>
               <CardFooter>
-                <SaveLink saveBook={saveBook} title={book.title}></SaveLink>
+                <SaveLink saveBook={saveBook} title={book.link}></SaveLink>
               </CardFooter>
             </Card>
           </BookCard>
