@@ -1,30 +1,17 @@
-import React, { useState } from "react";
+function ReadMore(props) {
 
-function ReadMore() {
-  let readMore = true;
-  const extraContent = (
-    <div>
-      <p className="extra-content">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui,
-        consectetur neque ab porro quasi culpa nulla rerum quis minus
-        voluptatibus sed hic ad quo sint, libero commodi officia aliquam!
-        Maxime.
-      </p>
-    </div>
-  );
-  const linkName = readMore ? "Read Less << " : "Read More >> ";
-  const expandOnClick = (e) => {
-    e.preventDefault();
-    readMore = false;
-  };
+    if (!props.showReadMore) {
+      return null;
+    }
+
   return (
     <div>
-      <a className="read-more-link" onClick={expandOnClick}>
-        <h2>{linkName}</h2>
+      <a className="read-more-link" onClick={props.expandOnClick}>
+        <h5 className="read-more">{props.linkName}</h5>
       </a>
-      {readMore && extraContent}
+      <p>{props.extraContent}</p>
     </div>
   );
 }
 
-export default ReadMore();
+export default ReadMore;

@@ -1,7 +1,6 @@
-// import BookContext from "../../utils/GlobalState";
+import ReadMore from "../ReadMore";
 
-function CardContent({ author, title, link, description, image }) {
-  // const { author, title, link, description, image } = useContext(BookContext);
+function CardContent({ author, title, link, description, image, linkName, expandOnClick, extraContent, showReadMore  }) {
 
   return (
     <div class="card-content">
@@ -19,6 +18,7 @@ function CardContent({ author, title, link, description, image }) {
       </div>
       <div class="content" style={{ textAlign: "justify" }}>
         {description}
+        <ReadMore expandOnClick={expandOnClick} linkName={linkName} extraContent={extraContent}  description={description} showReadMore={showReadMore}/>
         <br></br>
         <a href={link} className="preview-link">
           Preview Link

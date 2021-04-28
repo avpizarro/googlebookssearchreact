@@ -22,12 +22,15 @@ function Search() {
   const initialQuery = localStorage.getItem("Search");
 
   // Define the states
+
   // Define the books to load
   const [books, setBooks] = useState([]);
+
   // Define State to handle the user input value
   const [inputValue, setInputValue] = useState("");
   // Define the sate for the query to trigger useEffect whne a new query is made
   const [query, setQuery] = useState(initialQuery || "");
+
   // Define a state to send data about the chosen book to the modal component
   const [bookForModal, setBookForModal] = useState({
     volumeInfo: {
@@ -41,6 +44,14 @@ function Search() {
   const [show, setShow] = useState(false);
   // Set state for Modal message
   const [modalMessage, setModalMessage] = useState("");
+
+  // Set State to toggle ReadMore
+  const [expand, setExpand] = useState(false);
+  // Set State to change the linkName
+  const [linkName, setLinkName] = useState("Read More >> ");
+  //  Set the State to display extraContent
+  const [extraContent, setExtraContent] = useState("");
+
   // Set state for progress bar
   const [progressValue, setProgressValue] = useState("0");
 
@@ -56,18 +67,45 @@ function Search() {
       .get("https://www.googleapis.com/books/v1/volumes?q=" + query)
       .then((res) => {
         console.log(res.data.items);
-        const bookToAdd = res.data.items.map((book) => ({
-          authors: book.volumeInfo.authors,
-          title: book.volumeInfo.title,
-          image: book.volumeInfo.imageLinks.smallThumbnail,
-          description: book.volumeInfo.description,
-          link: book.volumeInfo.previewLink,
-        }));
+        const bookToAdd = res.data.items.map((book) => {
+          if (!book.volumeInfo.description) {
+            return {
+              authors: book.volumeInfo.authors,
+              title: book.volumeInfo.title,
+              image: book.volumeInfo.imageLinks.smallThumbnail,
+              description: "",
+              descriptionShort: "",
+              link: book.volumeInfo.previewLink,
+              extraDescription: "",
+            };
+          } else if (book.volumeInfo.description.length < 400) {
+            return {
+              authors: book.volumeInfo.authors,
+              title: book.volumeInfo.title,
+              image: book.volumeInfo.imageLinks.smallThumbnail,
+              description: book.volumeInfo.description,
+              descriptionShort: book.volumeInfo.description,
+              link: book.volumeInfo.previewLink,
+              extraDescription: "",
+            };
+          } else {
+            return {
+              authors: book.volumeInfo.authors,
+              title: book.volumeInfo.title,
+              image: book.volumeInfo.imageLinks.smallThumbnail,
+              description: book.volumeInfo.description,
+              descriptionShort: book.volumeInfo.description.slice(0,400),
+              link: book.volumeInfo.previewLink,
+              extraDescription: book.volumeInfo.description.slice(401, -1),
+            };
+          }
+        });
         console.log(bookToAdd);
         setBooks(bookToAdd);
       });
   }
-// Handle the user input onChange, add and clear local storage accordingly
+
+  // Handle the user input onChange, add and clear local storage accordingly
   const InputValueOnChange = (e) => {
     e.preventDefault();
     console.log("New input Value", e.target.value);
@@ -75,18 +113,18 @@ function Search() {
     localStorage.clear();
     localStorage.setItem("Search", e.target.value);
   };
-// Function to start searching onClick
+
+  // Function to start searching onClick
   const handleFormSubmit = (e) => {
     e.preventDefault();
     setQuery(inputValue);
     setProgressValue(null);
   };
-// Function to save the Book in the db, trigger the modal
+
+  // Function to save the Book in the db, trigger the modal
   const saveBook = (e) => {
     console.log(`I have been clicked ${e.target.title}`);
-    const chosenBook = books.filter(
-      (book) => book.title === e.target.title
-    );
+    const chosenBook = books.filter((book) => book.title === e.target.title);
     const bookToSave = chosenBook[0];
     setBookForModal(bookToSave);
 
@@ -103,12 +141,29 @@ function Search() {
         setModalMessage("was added");
       })
       .catch((err) => console.log(err));
-      setShow(true);
-      setModalMessage("was already added");
+    setShow(true);
+    setModalMessage("was already added");
   };
 
-  // Function to close the modal
+  // Function to close the Modal
   const closeModal = () => setShow(false);
+
+  // function to show ReadmoreLink
+
+  //  Function to expand the ReadMore
+  const expandOnClick = () => {
+    if (!expand) {
+      setExpand(true);
+      setLinkName("Read Less << ");
+      setExtraContent(
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
+      );
+    } else {
+      setExpand(false);
+      setLinkName("Read More >> ");
+      setExtraContent("");
+    }
+  };
 
   return (
     <div className="App">
@@ -135,13 +190,15 @@ function Search() {
                 author={book.authors[0]}
                 title={book.title}
                 link={book.link}
-                description={book.description}
+                description={book.descriptionShort}
+                expandOnClick={expandOnClick}
+                linkName={linkName}
+                extraContent={book.extraDescription}
+                expand={expand}
+                showReadMore={null}
               ></CardContent>
               <CardFooter>
-                <SaveLink
-                  saveBook={saveBook}
-                  title={book.title}
-                ></SaveLink>
+                <SaveLink saveBook={saveBook} title={book.title}></SaveLink>
               </CardFooter>
             </Card>
           </BookCard>

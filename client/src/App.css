@@ -21,8 +21,7 @@ body {
   color: black !important;
   font-size: 18px;
 }
-.preview-link,
-.read-more-link {
+.preview-link {
   color: orange !important;
 }
 
@@ -78,12 +77,20 @@ button:active {
 }
 .card-content {
   padding: 2.5rem !important;
-  margin: 20px;
+  margin: 10px;
 }
 .card-footer {
   margin-top: auto;
 }
 
-.card-footer-item:hover {
-  text-shadow: 0 0 .65px #333, 0 0 .65px #333;
+.card-footer-item:hover,
+.read-more:hover,
+.navbar-item:hover {
+  text-shadow: 0 0 0.65px #333;
+  letter-spacing: 0.05em;
+}
+
+.preview-link:hover {
+  text-shadow: 0 0 0.65px darkorange;
+  letter-spacing: 0.05em;
 }
