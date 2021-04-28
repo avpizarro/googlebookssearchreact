@@ -45,12 +45,10 @@ function Search() {
   // Set state for Modal message
   const [modalMessage, setModalMessage] = useState("");
 
-  // Set State to toggle ReadMore
-  const [expand, setExpand] = useState(false);
+ 
   // Set State to change the linkName
   const [linkName, setLinkName] = useState("Read More >> ");
-  //  Set the State to display extraContent
-  const [extraContent, setExtraContent] = useState("");
+
 
   // Set state for progress bar
   const [progressValue, setProgressValue] = useState("0");
@@ -77,6 +75,7 @@ function Search() {
               descriptionShort: "",
               link: book.volumeInfo.previewLink,
               extraDescription: "",
+              showReadMore: false,
             };
           } else if (book.volumeInfo.description.length < 400) {
             return {
@@ -87,6 +86,7 @@ function Search() {
               descriptionShort: book.volumeInfo.description,
               link: book.volumeInfo.previewLink,
               extraDescription: "",
+              showReadMore: false,
             };
           } else {
             return {
@@ -94,9 +94,10 @@ function Search() {
               title: book.volumeInfo.title,
               image: book.volumeInfo.imageLinks.smallThumbnail,
               description: book.volumeInfo.description,
-              descriptionShort: book.volumeInfo.description.slice(0,400),
+              descriptionShort: book.volumeInfo.description.slice(0, 400),
               link: book.volumeInfo.previewLink,
-              extraDescription: book.volumeInfo.description.slice(401, -1),
+              extraDescription: book.volumeInfo.description.slice(400, -1),
+              showReadMore: true,
             };
           }
         });
@@ -151,17 +152,11 @@ function Search() {
   // function to show ReadmoreLink
 
   //  Function to expand the ReadMore
-  const expandOnClick = () => {
-    if (!expand) {
-      setExpand(true);
-      setLinkName("Read Less << ");
-      setExtraContent(
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit."
-      );
-    } else {
-      setExpand(false);
+  const expandOnClick = (e) => {
+    if (linkName === "Read Less << ") {
       setLinkName("Read More >> ");
-      setExtraContent("");
+    } else {
+      setLinkName("Read Less << ");
     }
   };
 
@@ -192,10 +187,9 @@ function Search() {
                 link={book.link}
                 description={book.descriptionShort}
                 expandOnClick={expandOnClick}
-                linkName={linkName}
                 extraContent={book.extraDescription}
-                expand={expand}
-                showReadMore={null}
+                linkName={linkName}
+                showReadMore={book.showReadMore}
               ></CardContent>
               <CardFooter>
                 <SaveLink saveBook={saveBook} title={book.title}></SaveLink>

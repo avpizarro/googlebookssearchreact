@@ -1,4 +1,5 @@
 import ReadMore from "../ReadMore";
+import ReadMoreContent from "../ReadMoreContent";
 
 function CardContent({ author, title, link, description, image, linkName, expandOnClick, extraContent, showReadMore  }) {
 
@@ -18,9 +19,11 @@ function CardContent({ author, title, link, description, image, linkName, expand
       </div>
       <div class="content" style={{ textAlign: "justify" }}>
         {description}
-        <ReadMore expandOnClick={expandOnClick} linkName={linkName} extraContent={extraContent}  description={description} showReadMore={showReadMore}/>
+        <ReadMoreContent extraContent={extraContent} linkName={linkName}/>
+        <ReadMore expandOnClick={expandOnClick} showReadMore={showReadMore} linkName={linkName}/>
         <br></br>
-        <a href={link} className="preview-link">
+        <br></br>
+        <a href={link} target="_blank" className="preview-link">
           Preview Link
         </a>
       </div>
