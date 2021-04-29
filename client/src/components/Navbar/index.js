@@ -3,13 +3,13 @@ import { Link
 
 
 
-function Navbar() {
+function Navbar(props) {
   return (
     <nav
       className="navbar is-transparent"
       style={{ backgroundColor: "transparent" }}
     >
-      <div className="navbar-brand" style={{marginLeft: "40px"}}>
+      <div className="navbar-brand ml-6">
           <Link to="/" className="navbar-item">
             Search
           </Link>
