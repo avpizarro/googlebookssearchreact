@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const mongoose = require("mongoose");
 const app = express();
+const socketIo = require("socket.io");
 const PORT = process.env.PORT || 3001;
 
 const books = require("./routes/api/books");
@@ -16,7 +17,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Use routes
-app.use('/api/books', books);
+app.use("/api/books", books);
 
 // DB config
 const db = require("./config/keys").mongoURI;
@@ -29,4 +30,44 @@ mongoose
 // process.env.MONGODB_URI || "mongodb://localhost/googlebooks",
 
 //Start the API Server
-app.listen(PORT, () => console.log(`🌎 ==> API server now on port ${PORT}!`));
+const server = app.listen(PORT, () =>
+  console.log(`🌎 ==> API server now on port ${PORT}!`)
+);
+
+const io = socketIo(server);
+
+// Start ce
+io.on("connection", (socket) => {
+
+  console.log("New client connected " + socket.id);
+  socket.emit("message", "This is a message from the server");
+
+  socket.on("modalClient", message => {
+    console.log(message);
+   io.emit("modalToShow", message)})
+   
+   socket.on("deletedModalClient", message => {
+     console.log(message);
+    io.emit("deletedModalToShow", message)})
+
+   socket.on("bookToDisplayClientInfo", book => {
+   console.log(book);
+   io.emit("savedBooks", book)}
+   )
+
+   socket.on("bookForModalClientInfo", bookModal => {
+     console.log(bookModal);
+     io.emit("bookForModal", bookModal)
+   })
+
+   socket.on("messageForModalClientInfo", messageModal => {
+    console.log(messageModal);
+    io.emit("messageForModal", messageModal)
+  })
+
+  socket.on("deletedBookClientInfo", deletedBook => {
+    console.log(deletedBook);
+    io.emit("deletedBook", deletedBook)
+  })
+
+});

@@ -7,13 +7,13 @@ function Modal(props) {
   }
 
   return (
-    <div className="modal is-active" style={{ height: "100px" }}>
+    <div className="modal is-active" style={{ minHeight: "100px", height:"fit-content"}}>
       <div className="modal-background"></div>
-      <div className="modal-content ml-6 has-text-white">
+      <div className="modal-content ml-6 mr-6 has-text-white">
         <div className="media">
           <div className="media-left">
-            <figure className="image is-48x48">
-              <img src={props.image} />
+            <figure >
+              <img src={props.image} alt={props.title} style={{height: "72px", width: "48px"}}/>
             </figure>
           </div>
           <p>

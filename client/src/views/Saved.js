@@ -1,5 +1,6 @@
 // Import dependencies
 import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
 import axios from "axios";
 
 // Import components
@@ -16,8 +17,11 @@ import Modal from "../components/Modal";
 // Import utils
 import API from "../utils/API";
 
+const socket = socketIOClient();
+
 // Create Saved page component
 function Saved() {
+  socket.on("message", message => console.log(message));
   // Set the states to display books, modal and render again after a Book is deleted
   const [books, setBooks] = useState([]);
   const [show, setShow] = useState(false);
@@ -97,25 +101,32 @@ function Saved() {
     // Get the info from the deleted book to display in Modal
     const chosenBook = books.filter((book) => book.id === e.target.id);
     const bookToDelete = chosenBook[0];
-    setDeletedBook(bookToDelete);
+    socket.on('deletedBook', book => setDeletedBook(book));
+    socket.emit('deletedBookClientInfo', bookToDelete);
     
     // Remove the deleted book from saved books array and stop displaying it
     const savedBooks = books.filter((book) => book.id !== e.target.id);
-    setBooks(savedBooks);
+    // setBooks(savedBooks);
+    socket.on('savedBooks', books => setBooks(books));
+    socket.emit('bookToDisplayClientInfo', savedBooks);
 
 
 
     // POST request to delete Book from db
     API.deleteBook(e.target.id)
       .then((res) => {
-        setShow(true);
+        // setShow(true);
+        socket.on('deletedModalToShow', message => setShow(message));
+        socket.emit('deletedModalClient', true);
       })
       .catch((err) => console.log(err));
   };
 
   // Function to close the modal
-  const closeModal = () => setShow(false);
-
+  const closeModal = () => {
+  socket.on('deletedModalToShow', message => setShow(message));
+  socket.emit("deletedModalClient", false)
+  };
   //  Function to expand the ReadMore
   const expandOnClick = (e) => {
     if (linkName === "Read Less << ") {
@@ -124,6 +135,7 @@ function Saved() {
       setLinkName("Read Less << ");
     }
   };
+
 
   return (
     <div className="App">

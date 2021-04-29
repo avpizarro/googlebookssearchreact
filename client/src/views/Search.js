@@ -1,9 +1,10 @@
 // Import external dependencies
 import React, { useState, useEffect } from "react";
+import socketIOClient from "socket.io-client";
 import axios from "axios";
 
 // Import local components
-import logo from "../images/logo192.png"
+import logo from "../images/logo192.png";
 import Navbar from "../components/Navbar/index";
 import Header from "../components/Header/index";
 import BookSearch from "../components/BookSearch/index";
@@ -17,8 +18,11 @@ import CardContent from "../components/CardContent";
 import Card from "../components/Card";
 import Modal from "../components/Modal";
 
+const socket = socketIOClient();
 // Create Search Page Component
 function Search() {
+
+  socket.on("message", message => console.log(message));
   // Set the initial query to be the last searched paramenter
   const initialQuery = localStorage.getItem("Search");
 
@@ -29,6 +33,7 @@ function Search() {
 
   // Define State to handle the user input value
   const [inputValue, setInputValue] = useState("");
+
   // Define the sate for the query to trigger useEffect whne a new query is made
   const [query, setQuery] = useState(initialQuery || "");
 
@@ -51,7 +56,7 @@ function Search() {
 
   // Set state for progress bar
   const [progressValue, setProgressValue] = useState("0");
-
+  
   // Set useEffect to trigger the rendering upon change of query
   useEffect(() => {
     loadBooks();
@@ -66,17 +71,17 @@ function Search() {
         console.log(res.data.items);
         const booksToAdd = res.data.items.map((book) => {
           if (!book.volumeInfo.imageLinks) {
-            return {authors: book.volumeInfo.authors || "",
-            title: book.volumeInfo.title || "",
-            image: logo,
-            description: "",
-            descriptionShort: "",
-            link: book.volumeInfo.previewLink || "",
-            extraDescription: "",
-            showReadMore: false,
-          }
-          }
-          else if (!book.volumeInfo.description) {
+            return {
+              authors: book.volumeInfo.authors || "",
+              title: book.volumeInfo.title || "",
+              image: logo,
+              description: "",
+              descriptionShort: "",
+              link: book.volumeInfo.previewLink || "",
+              extraDescription: "",
+              showReadMore: false,
+            };
+          } else if (!book.volumeInfo.description) {
             return {
               authors: book.volumeInfo.authors || "",
               title: book.volumeInfo.title || "",
@@ -105,7 +110,7 @@ function Search() {
               image: book.volumeInfo.imageLinks.smallThumbnail || "",
               description: book.volumeInfo.description,
               descriptionShort: book.volumeInfo.description.slice(0, 400),
-              link: book.volumeInfo.previewLink ,
+              link: book.volumeInfo.previewLink,
               extraDescription: book.volumeInfo.description.slice(400, -1),
               showReadMore: true,
             };
@@ -138,7 +143,9 @@ function Search() {
     console.log(`I have been clicked ${e.target.title}`);
     const chosenBook = books.filter((book) => book.link === e.target.title);
     const bookToSave = chosenBook[0];
-    setBookForModal(bookToSave);
+    socket.on('bookForModal', message => setBookForModal(message));
+    socket.emit('bookForModalClientInfo', bookToSave);
+    // setBookForModal(bookToSave);
 
     API.saveBook({
       title: bookToSave.title,
@@ -148,19 +155,41 @@ function Search() {
       image: bookToSave.image,
     })
       .then((res) => {
-        console.log("Book saved " + res);
-        setShow(true);
-        setModalMessage("was added");
-      })
-      .catch((err) => {
-        setShow(true);
-        setModalMessage("was already added");
+        // Set message for Modal to advise the book was saved
+        socket.on('messageForModal', message => {
+          console.log(message);
+          setModalMessage(message)}
+          );
+          socket.emit('messageForModalClientInfo', "was saved");
+          
+          console.log("Book saved " + res);
+          socket.on('modalToShow', message => setShow(message));
+          socket.emit('modalClient', true);
+          
+          // setModalMessage("was saved");
+        })
+        .catch((err) => {
+        // Set message for Modal to advise the book was already
+        socket.on('messageForModal', message => {
+          console.log(message);
+          setModalMessage(message)}
+          );
+        socket.emit('messageForModalClientInfo', "was already saved");
+        // setModalMessage("was already saved");       
+        socket.on('modalToShow', message => {
+          console.log(message);
+          setShow(message)}
+          );
+        socket.emit('modalClient', true);
         return err;
       });
   };
 
   // Function to close the Modal
-  const closeModal = () => setShow(false);
+  const closeModal = () => {
+    socket.on('modalToShow', message => setShow(message));
+    socket.emit("modalClient", false)
+  }
 
   // function to show ReadmoreLink
 
